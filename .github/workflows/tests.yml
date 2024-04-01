@@ -12,6 +12,9 @@ jobs:
       matrix:
         php:
           - 8.0
+          - 8.1
+          - 8.2
+          - 8.3
     name: PHP ${{matrix.php }} Unit Test
     steps:
       - uses: actions/checkout@v4
@@ -35,7 +38,7 @@ jobs:
         env:
           ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        run: vendor/bin/phpunit --coverage-clover clover.xml
+        run: vendor/bin/phpunit --coverage-clover clover.xml --coverage-text
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v4
         with:
