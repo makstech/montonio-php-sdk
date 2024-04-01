@@ -1,0 +1,26 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: google-github-actions/release-please-action@v4
+        with:
+          release-type: php
+      # The logic below handles the package publication:
+      - uses: actions/checkout@v4
+        if: ${{ steps.release.outputs.release_created }}
+      - uses: mnavarrocarter/packagist-update@v1.0
+        with:
+          username: ${{ secrets.PACKAGIST_USERNAME }}
+          api_token: ${{ secrets.PACKAGIST_TOKEN }}
+        if: ${{ steps.release.outputs.release_created }}
