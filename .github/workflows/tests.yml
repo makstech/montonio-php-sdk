@@ -1,9 +1,16 @@
 name: Test Suite
+
 on:
   push:
     branches:
       - main
+    paths: &test_paths
+      - '**.php'
+      - '.github/workflows/tests.yml'
+      - composer.json
+      - phpunit.xml
   pull_request:
+    paths: *test_paths
 
 jobs:
   test:
