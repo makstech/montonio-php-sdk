@@ -1,0 +1,39 @@
+{
+  "name": "makstech/montonio-php-sdk",
+  "description": "Montonio PHP Library",
+  "keywords": [
+    "montonio",
+    "payment",
+    "payments"
+  ],
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/makstech/montonio-php-sdk",
+  "require": {
+    "php": "^8.0",
+    "ext-curl": "*",
+    "firebase/php-jwt": "^6.0"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^9.6"
+  },
+  "autoload": {
+    "psr-4": {
+      "Montonio\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "authors": [
+    {
+      "name": "Max Slotov",
+      "email": "max@slotov.dev"
+    }
+  ],
+  "config": {
+    "lock": false
+  }
+}

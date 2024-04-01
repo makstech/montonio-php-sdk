@@ -1,0 +1,8 @@
+.DS_Store
+/vendor
+clover.xml
+.idea
+.php_cs
+.php_cs.cache
+.php-cs-fixer.cache
+.phpunit.result.cache
