@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/makstech/montonio-php-sdk/compare/v1.0.0...v1.1.0) (2024-04-02)
+
+
+### Features
+
+* automatically convert raw nested data to structures ([#4](https://github.com/makstech/montonio-php-sdk/issues/4)) ([340a71b](https://github.com/makstech/montonio-php-sdk/commit/340a71bf0ea0fe425fee041a940da49fe1fee168))
+
 ## 1.0.0 (2024-04-02)
 
 
