@@ -26,7 +26,6 @@ class OrderData extends AbstractStruct
     protected array $lineItems = [];
     protected Address $billingAddress;
     protected Address $shippingAddress;
-    protected string $paymentIntentUuid;
 
     /**
      * The order reference in the merchant's system (e.g. the WooCommerce Order ID).
@@ -218,6 +217,12 @@ class OrderData extends AbstractStruct
      */
     public function setLineItems(array $lineItems): self
     {
+        foreach ($lineItems as $key => $lineItem) {
+            if (is_array($lineItem)) {
+                $lineItems[$key] = new LineItem($lineItem);
+            }
+        }
+
         $this->lineItems = $lineItems;
 
         return $this;
