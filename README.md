@@ -1,7 +1,8 @@
 # PHP library for Montonio API
 
 [![Latest Version](https://img.shields.io/github/release/makstech/montonio-php-sdk.svg?style=flat-square)](https://github.com/makstech/montonio-php-sdk/releases)
-[![Total Downloads](https://img.shields.io/packagist/dt/makstech/montonio-php-sdk?style=flat-square)](https://packagist.org/packages/makstech/montonio-php-sdk)
+[![Total Downloads](https://img.shields.io/packagist/dt/makstech/montonio-php-sdk?style=flat-square&label=downloads)](https://packagist.org/packages/makstech/montonio-php-sdk)
+[![Codecov](https://img.shields.io/codecov/c/github/makstech/montonio-php-sdk?style=flat-square)](https://app.codecov.io/gh/makstech/montonio-php-sdk)
 
 PHP SDK for Montonio Payments based on [https://docs.montonio.com](https://docs.montonio.com).
 - Allows to fluently create requests with structures.
