@@ -5,6 +5,7 @@
 
 PHP SDK for Montonio Payments based on [https://docs.montonio.com](https://docs.montonio.com).
 - Allows to fluently create requests with structures.
+- Or a raw data can be passed to the structure object, to have it create all the child structures.
 - Uses cURL to make requests.
 
 ## Requirements
@@ -54,9 +55,20 @@ $address = (new \Montonio\Structs\Address([
     ->setLastName('bezos')
     ...;
 
-$orderData = new \Montonio\Structs\OrderData();
+// This is same...
+$orderData = new \Montonio\Structs\OrderData([
+    'locale' => 'en',
+    ...
+    'billingAddress' => [
+        'firstName' => 'jeff',
+        ...
+    ],
+]);
+
+// ... as this, but fluently
 $orderData
     ->setLocale('en')
+    ->setBillingAddress($address)
     ->setMerchantReference(uniqid())
     ->setReturnUrl('https://google.com?q=montonio+return+url')
     ->setNotificationUrl('https://google.com?q=montonio+notification')
@@ -74,7 +86,6 @@ $orderData
             ->setFinalPrice(668.5)
             ->setQuantity(2)
     )
-    ->setBillingAddress($address)
     ->setShippingAddress($address)
 ;
 
