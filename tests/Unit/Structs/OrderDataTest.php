@@ -8,6 +8,7 @@ use Montonio\Structs\Address;
 use Montonio\Structs\LineItem;
 use Montonio\Structs\OrderData;
 use Montonio\Structs\Payment;
+use Montonio\Structs\PaymentMethodOptions;
 use Tests\BaseTestCase;
 
 class OrderDataTest extends BaseTestCase
@@ -44,13 +45,24 @@ class OrderDataTest extends BaseTestCase
                     ->setCurrency('EUR')
                     ->setAmount(1337)
                     ->setMethod(Payment::METHOD_PAYMENT_INITIATION)
+                    ->setMethodDisplay('some method display')
+                    ->setMethodOptions(
+                        (new PaymentMethodOptions())
+                            ->setPaymentDescription('some payment description')
+                            ->setPaymentReference('payment ref')
+                            ->setPreferredCountry('lv')
+                            ->setPreferredProvider('pref provider')
+                            ->setPreferredMethod('pref method')
+                            ->setPreferredLocale('pl')
+                            ->setPeriod(2)
+                    )
             )
-            ->addLineItem(
+            ->setLineItems([
                 $item1 = (new LineItem())
                     ->setName('elephant')
                     ->setFinalPrice(667.5)
                     ->setQuantity(2)
-            )
+            ])
             ->addLineItem(
                 $item2 = (new LineItem())
                     ->setName('not elephant')
@@ -64,6 +76,7 @@ class OrderDataTest extends BaseTestCase
 
         $dataRaw = $data->toArray();
 
+        $this->assertSame('en', $data->getLocale());
         $this->assertSame(1337.0, $data->getGrandTotal());
         $this->assertSame(1337.0, $dataRaw['grandTotal']);
 
@@ -81,5 +94,43 @@ class OrderDataTest extends BaseTestCase
         $this->assertCount(2, $dataRaw['lineItems']);
         $this->assertIsArray($dataRaw['lineItems'][1]);
         $this->assertSame(2.0, $dataRaw['lineItems'][1]['finalPrice']);
+
+        $this->assertSame('pref method', $dataRaw['payment']['methodOptions']['preferredMethod']);
+        $this->assertSame('pref method', $data->getPayment()->getMethodOptions()->getPreferredMethod());
+    }
+
+    public function testRawSetters(): void
+    {
+        $data = new OrderData([
+            'currency' => 'PLN',
+            'grandTotal' => 420,
+            'payment' => [
+                'currency' => 'EUR',
+                'amount' => 420,
+                'methodOptions' => [
+                    'paymentDescription' => 'description for payment',
+                ],
+            ],
+            'lineItems' => [
+                [
+                    'name' => 'item1',
+                ],
+            ],
+            'shippingAddress' => null,
+            'unknownProperty' => 'aaa',
+        ]);
+
+        $this->assertNull($data->getShippingAddress());
+        $this->assertSame(420.0, $data->getGrandTotal());
+        $this->assertSame(420.0, $data->getPayment()->getAmount());
+        $this->assertSame('description for payment', $data->getPayment()->getMethodOptions()->getPaymentDescription());
+        $this->assertCount(1, $data->getLineItems());
+        $this->assertInstanceOf(LineItem::class, $data->getLineItems()[0]);
+        $this->assertSame('item1', $data->getLineItems()[0]->getName());
+
+        $dataRaw = $data->toArray();
+
+        $this->assertArrayNotHasKey('shippingAddress', $dataRaw);
+        $this->assertArrayNotHasKey('unknownProperty', $dataRaw);
     }
 }
