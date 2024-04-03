@@ -17,11 +17,3 @@ jobs:
         id: release
         with:
           release-type: php
-      # The logic below handles the package publication:
-      - uses: actions/checkout@v4
-        if: ${{ steps.release.outputs.release_created }}
-      - uses: mnavarrocarter/packagist-update@v1.0.0
-        with:
-          username: ${{ secrets.PACKAGIST_USERNAME }}
-          api_token: ${{ secrets.PACKAGIST_TOKEN }}
-        if: ${{ steps.release.outputs.release_created }}
