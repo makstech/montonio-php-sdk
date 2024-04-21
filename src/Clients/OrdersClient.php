@@ -12,4 +12,9 @@ class OrdersClient extends AbstractClient
     {
         return $this->post('orders', $paymentData->toArray());
     }
+
+    public function getOrder(string $uuid): array
+    {
+        return $this->get('orders/' . $uuid);
+    }
 }
