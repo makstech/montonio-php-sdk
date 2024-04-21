@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/makstech/montonio-php-sdk/compare/v1.1.0...v1.2.0) (2024-04-21)
+
+
+### Features
+
+* get order api ([#6](https://github.com/makstech/montonio-php-sdk/issues/6)) ([912476e](https://github.com/makstech/montonio-php-sdk/commit/912476e7fdafaa1924d32b5f6195e263fd9aa7b0))
+
 ## [1.1.0](https://github.com/makstech/montonio-php-sdk/compare/v1.0.0...v1.1.0) (2024-04-02)
 
 
