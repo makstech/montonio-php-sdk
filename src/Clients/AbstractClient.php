@@ -122,7 +122,7 @@ abstract class AbstractClient
 
         $message = '';
 
-        if ($httpStatus === 400) {
+        if (400 <= $httpStatus && $httpStatus <= 499) {
             try {
                 $body = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
                 $message = $body['error'] ?? '';
@@ -132,12 +132,7 @@ abstract class AbstractClient
             }
         }
 
-        throw new RequestException(
-            $message,
-            $httpStatus,
-            $response,
-            $ch
-        );
+        throw new RequestException($message, $httpStatus, $response, $ch);
     }
 
     protected function isSandbox(): bool
