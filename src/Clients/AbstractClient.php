@@ -108,8 +108,10 @@ abstract class AbstractClient
     {
         $response = curl_exec($ch);
 
+        // @codeCoverageIgnoreStart
         if ($response === false) {
             throw new CurlErrorException(curl_error($ch), curl_errno($ch), $ch);
+            // @codeCoverageIgnoreEnd
         }
 
         $httpStatus = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -124,8 +126,9 @@ abstract class AbstractClient
             try {
                 $body = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
                 $message = $body['error'] ?? '';
+                // @codeCoverageIgnoreStart
             } catch (JsonException $e) {
-                //
+                // @codeCoverageIgnoreEnd
             }
         }
 
