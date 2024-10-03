@@ -8,7 +8,7 @@ use Tests\BaseTestCase;
 
 class StoresClientTest extends BaseTestCase
 {
-    public function testGetPaymentMethods()
+    public function testGetPaymentMethods(): void
     {
         $methods = $this->getMontonioClient()->stores()->getPaymentMethods();
 
