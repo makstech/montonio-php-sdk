@@ -8,6 +8,7 @@ use CurlHandle;
 use Exception;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
+use JsonException;
 use Montonio\Exception\CurlErrorException;
 use Montonio\Exception\RequestException;
 use Montonio\MontonioClient;
@@ -107,8 +108,10 @@ abstract class AbstractClient
     {
         $response = curl_exec($ch);
 
+        // @codeCoverageIgnoreStart
         if ($response === false) {
             throw new CurlErrorException(curl_error($ch), curl_errno($ch), $ch);
+            // @codeCoverageIgnoreEnd
         }
 
         $httpStatus = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -117,8 +120,20 @@ abstract class AbstractClient
             return json_decode($response, true);
         }
 
+        $message = '';
+
+        if ($httpStatus === 400) {
+            try {
+                $body = json_decode($response, true, 512, JSON_THROW_ON_ERROR);
+                $message = $body['error'] ?? '';
+                // @codeCoverageIgnoreStart
+            } catch (JsonException $e) {
+                // @codeCoverageIgnoreEnd
+            }
+        }
+
         throw new RequestException(
-            '',
+            $message,
             $httpStatus,
             $response,
             $ch
