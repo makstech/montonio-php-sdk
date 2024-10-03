@@ -4,8 +4,14 @@ declare(strict_types=1);
 
 namespace Montonio\Structs;
 
+use Montonio\Structs\Fields\Currency;
+use Montonio\Structs\Fields\Locale;
+use Montonio\Structs\Fields\NotificationUrl;
+
 class OrderData extends AbstractStruct
 {
+    use Currency, Locale, NotificationUrl;
+
     public const STATUS_PENDING = 'PENDING';
     public const STATUS_PAID = 'PAID';
     public const STATUS_VOIDED = 'VOIDED';
@@ -16,10 +22,7 @@ class OrderData extends AbstractStruct
 
     protected string $merchantReference;
     protected string $returnUrl;
-    protected string $notificationUrl;
     protected float $grandTotal;
-    protected string $currency;
-    protected string $locale;
     protected Payment $payment;
     protected int $exp;
     /** @var LineItem[] */
@@ -64,24 +67,6 @@ class OrderData extends AbstractStruct
     }
 
     /**
-     * The URL to send a webhook notification about Order updates, e.g when a payment is completed.
-     */
-    public function getNotificationUrl(): ?string
-    {
-        return $this->notificationUrl ?? null;
-    }
-
-    /**
-     * The URL to send a webhook notification about Order updates, e.g when a payment is completed.
-     */
-    public function setNotificationUrl(string $notificationUrl): self
-    {
-        $this->notificationUrl = $notificationUrl;
-
-        return $this;
-    }
-
-    /**
      * Order grand total up to 2 decimal places (e.g 19.99).
      */
     public function getGrandTotal(): ?float
@@ -100,24 +85,6 @@ class OrderData extends AbstractStruct
     }
 
     /**
-     * Payment currency. Currently EUR and PLN are supported depending on the payment method provided.
-     */
-    public function getCurrency(): ?string
-    {
-        return $this->currency ?? null;
-    }
-
-    /**
-     * Payment currency. Currently EUR and PLN are supported depending on the payment method provided.
-     */
-    public function setCurrency(string $currency): self
-    {
-        $this->currency = $currency;
-
-        return $this;
-    }
-
-    /**
      * The payment method to use.
      */
     public function getPayment(): ?Payment
@@ -131,26 +98,6 @@ class OrderData extends AbstractStruct
     public function setPayment(Payment $payment): self
     {
         $this->payment = $payment;
-
-        return $this;
-    }
-
-    /**
-     * The preferred language of the payment gateway. Defaults to the merchant country's official language.
-     * Available values are de, en, et, fi, lt, lv, pl, ru.
-     */
-    public function getLocale(): ?string
-    {
-        return $this->locale ?? null;
-    }
-
-    /**
-     * The preferred language of the payment gateway. Defaults to the merchant country's official language.
-     * Available values are de, en, et, fi, lt, lv, pl, ru.
-     */
-    public function setLocale(string $locale): self
-    {
-        $this->locale = $locale;
 
         return $this;
     }

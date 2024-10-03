@@ -4,49 +4,21 @@ declare(strict_types=1);
 
 namespace Montonio\Structs;
 
+use Montonio\Structs\Fields\Amount;
+use Montonio\Structs\Fields\Currency;
+
 class Payment extends AbstractStruct
 {
+    use Amount, Currency;
+
     public const METHOD_PAYMENT_INITIATION = 'paymentInitiation';
     public const METHOD_CARD = 'cardPayments';
     public const METHOD_BLIK = 'blik';
     public const METHOD_HIRE_PURCHASE = 'hirePurchase';
     public const METHOD_BUY_NOW_PAY_LATER = 'bnpl';
-
-    protected float $amount;
-    protected string $currency;
     protected string $method;
     protected string $methodDisplay;
     protected PaymentMethodOptions $methodOptions;
-
-    public function getAmount(): ?float
-    {
-        return $this->amount;
-    }
-
-    /**
-     * The amount to charge. This is the total amount of the order, including tax and shipping.
-     */
-    public function setAmount(float $amount): self
-    {
-        $this->amount = $amount;
-
-        return $this;
-    }
-
-    public function getCurrency(): ?string
-    {
-        return $this->currency;
-    }
-
-    /**
-     * The currency of the order. This is a 3-letter ISO currency code.
-     */
-    public function setCurrency(string $currency): self
-    {
-        $this->currency = $currency;
-
-        return $this;
-    }
 
     public function getMethod(): ?string
     {
