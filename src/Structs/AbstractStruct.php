@@ -56,10 +56,6 @@ abstract class AbstractStruct
     {
         $return = [];
         foreach (get_object_vars($this) as $property => $value) {
-            if (!isset($this->{$property})) {
-                continue;
-            }
-
             // Getting the property using getter
             $methodName = 'get' . ucfirst($property);
             $value = method_exists($this, $methodName)
