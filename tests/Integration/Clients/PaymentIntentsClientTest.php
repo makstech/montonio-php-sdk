@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace Clients;
+namespace Tests\Integration\Clients;
 
 use CurlHandle;
 use Montonio\Exception\RequestException;
 use Montonio\Structs\CreatePaymentIntentDraftData;
 use Montonio\Structs\Payment;
-use Tests\BaseTestCase;
+use Tests\Integration\IntegrationTestCase;
 
-class PaymentIntentsClientTest extends BaseTestCase
+class PaymentIntentsClientTest extends IntegrationTestCase
 {
     public function testCreateDraft(): void
     {

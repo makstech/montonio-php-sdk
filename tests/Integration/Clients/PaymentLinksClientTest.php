@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace Clients;
+namespace Tests\Integration\Clients;
 
 use Montonio\Structs\CreatePaymentLinkData;
-use Tests\BaseTestCase;
+use Tests\Integration\IntegrationTestCase;
 
-class PaymentLinksClientTest extends BaseTestCase
+class PaymentLinksClientTest extends IntegrationTestCase
 {
     public function testCreatePaymentLink(): void
     {

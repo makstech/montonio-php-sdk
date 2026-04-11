@@ -4,12 +4,8 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-if (!$accessKey = getenv('ACCESS_KEY')) {
-    throw new InvalidArgumentException('ACCESS_KEY env variable not set');
-}
-if (!$secretKey = getenv('SECRET_KEY')) {
-    throw new InvalidArgumentException('SECRET_KEY env variable not set');
-}
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv->safeLoad();
 
-define('ACCESS_KEY', $accessKey);
-define('SECRET_KEY', $secretKey);
+define('ACCESS_KEY', getenv('ACCESS_KEY') ?: '');
+define('SECRET_KEY', getenv('SECRET_KEY') ?: str_repeat('x', 32));
