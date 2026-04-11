@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Clients;
 
-use Tests\BaseTestCase;
+use Tests\Integration\IntegrationTestCase;
 
-class StoresClientTest extends BaseTestCase
+class StoresClientTest extends IntegrationTestCase
 {
     public function testGetPaymentMethods(): void
     {

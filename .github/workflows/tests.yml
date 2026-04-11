@@ -26,9 +26,10 @@ jobs:
           - 8.1
           - 8.2
           - 8.3
+          - 8.4
     name: PHP ${{matrix.php }} Unit Test
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
@@ -38,7 +39,7 @@ jobs:
         id: composer-cache
         run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
       - name: Cache dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
           key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
@@ -51,8 +52,7 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: vendor/bin/phpunit --coverage-clover clover.xml --coverage-text
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: ./coverage.xml
-          verbose: true
+          files: ./clover.xml
