@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Tests\Unit;
 
 use Montonio\Clients\OrdersClient;
+use Montonio\Clients\RefundsClient;
 use Montonio\Clients\StoresClient;
 use Montonio\Structs\OrderData;
 use stdClass;
@@ -46,5 +47,12 @@ class MontonioClientTest extends BaseTestCase
         $client = $this->getMontonioClient()->stores();
 
         $this->assertInstanceOf(StoresClient::class, $client);
+    }
+
+    public function testGetRefundsClient(): void
+    {
+        $client = $this->getMontonioClient()->refunds();
+
+        $this->assertInstanceOf(RefundsClient::class, $client);
     }
 }
