@@ -51,7 +51,7 @@ jobs:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: vendor/bin/phpunit --coverage-clover clover.xml --coverage-text
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ./coverage.xml
