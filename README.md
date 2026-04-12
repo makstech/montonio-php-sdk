@@ -149,6 +149,22 @@ $orderData = (new \Montonio\Structs\OrderData())
 ;
 ```
 
+### Payouts
+
+Retrieve [payout reports](https://docs.montonio.com/api/stargate/guides/payouts/) and balances:
+
+```php
+// Get store balances
+$balances = $client->payouts()->getBalances();
+
+// List payouts for a store
+$payouts = $client->payouts()->getPayouts($storeUuid, limit: 50, offset: 0, order: 'DESC');
+
+// Export a payout report (excel or xml)
+$export = $client->payouts()->exportPayout($storeUuid, $payoutUuid, 'excel');
+$downloadUrl = $export['url'];
+```
+
 ## License
 
 This library is made available under the MIT License (MIT). Please see [License File](LICENSE) for more information.
