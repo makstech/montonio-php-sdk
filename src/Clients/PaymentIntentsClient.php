@@ -6,7 +6,7 @@ namespace Montonio\Clients;
 
 use Montonio\Structs\CreatePaymentIntentDraftData;
 
-class PaymentIntentsClient extends AbstractClient
+class PaymentIntentsClient extends PaymentsAbstractClient
 {
     public function createDraft(CreatePaymentIntentDraftData $data): array
     {

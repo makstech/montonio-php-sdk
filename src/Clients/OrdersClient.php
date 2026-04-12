@@ -6,7 +6,7 @@ namespace Montonio\Clients;
 
 use Montonio\Structs\OrderData;
 
-class OrdersClient extends AbstractClient
+class OrdersClient extends PaymentsAbstractClient
 {
     public function createOrder(OrderData $paymentData): array
     {

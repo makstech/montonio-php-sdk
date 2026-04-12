@@ -6,7 +6,7 @@ namespace Montonio\Clients;
 
 use Montonio\Structs\CreateRefundData;
 
-class RefundsClient extends AbstractClient
+class RefundsClient extends PaymentsAbstractClient
 {
     public function createRefund(CreateRefundData $data): array
     {

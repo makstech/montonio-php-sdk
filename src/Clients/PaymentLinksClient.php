@@ -6,7 +6,7 @@ namespace Montonio\Clients;
 
 use Montonio\Structs\CreatePaymentLinkData;
 
-class PaymentLinksClient extends AbstractClient
+class PaymentLinksClient extends PaymentsAbstractClient
 {
     public function createPaymentLink(CreatePaymentLinkData $data): array
     {
