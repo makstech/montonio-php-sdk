@@ -59,6 +59,16 @@ abstract class AbstractClient
         return JWT::encode($payload, $this->getSecretKey(), static::ENCODING_ALGORITHM);
     }
 
+    /**
+     * Decode and verify a JWT token signed with your secret key.
+     *
+     * Use this to verify webhook tokens from Montonio:
+     * - Order webhooks send {"orderToken": "<jwt>"} with fields: uuid, merchantReference, paymentStatus, etc.
+     * - Refund webhooks send {"refundToken": "<jwt>"} with fields: refundUuid, refundStatus, refundAmount, etc.
+     *
+     * @throws \Firebase\JWT\SignatureInvalidException if the token signature is invalid
+     * @throws \Firebase\JWT\ExpiredException if the token has expired
+     */
     public function decodeToken(string $token): stdClass
     {
         return JWT::decode($token, new Key($this->getSecretKey(), static::ENCODING_ALGORITHM));
