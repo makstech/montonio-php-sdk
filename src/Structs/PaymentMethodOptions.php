@@ -15,6 +15,7 @@ class PaymentMethodOptions extends AbstractStruct
     protected string $preferredMethod;
     protected string $preferredLocale;
     protected int $period;
+    protected string $blikCode;
 
     /**
      * Used for `paymentInitiation`.
@@ -100,6 +101,26 @@ class PaymentMethodOptions extends AbstractStruct
     public function setPeriod(int $period): self
     {
         $this->period = $period;
+
+        return $this;
+    }
+
+    /**
+     * Used for embedded `blik` payments.
+     * The 6-digit BLIK code entered by the customer.
+     */
+    public function getBlikCode(): ?string
+    {
+        return $this->blikCode ?? null;
+    }
+
+    /**
+     * Used for embedded `blik` payments.
+     * The 6-digit BLIK code entered by the customer.
+     */
+    public function setBlikCode(string $blikCode): self
+    {
+        $this->blikCode = $blikCode;
 
         return $this;
     }
