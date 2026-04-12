@@ -102,6 +102,24 @@ header("Location: $paymentUrl");
 
 You can find the documentation with the response data example, in the [official docs](https://docs.montonio.com/api/stargate/guides/orders#4-submitting-the-token).
 
+### Webhook verification
+
+When a payment is completed (or updated), Montonio sends a webhook POST request to your `notificationUrl` with a JWT token.
+Use `decodeToken()` to verify the signature and decode the payload:
+
+```php
+// Order webhook: {"orderToken": "<jwt>"}
+$decoded = $client->decodeToken($request['orderToken']);
+echo $decoded->paymentStatus; // 'PAID', 'PENDING', etc.
+echo $decoded->merchantReference; // Your order reference
+
+// Refund webhook: {"refundToken": "<jwt>"}
+$decoded = $client->decodeToken($request['refundToken']);
+echo $decoded->refundStatus; // 'SUCCESSFUL', 'PENDING', etc.
+```
+
+See the [webhooks guide](https://docs.montonio.com/api/stargate/guides/webhooks) for full payload details.
+
 ## License
 
 This library is made available under the MIT License (MIT). Please see [License File](LICENSE) for more information.
