@@ -1,128 +1,180 @@
-# PHP library for Montonio API
+# Montonio PHP SDK
 
 [![Latest Version](https://img.shields.io/github/release/makstech/montonio-php-sdk.svg?style=flat-square)](https://github.com/makstech/montonio-php-sdk/releases)
 [![Total Downloads](https://img.shields.io/packagist/dt/makstech/montonio-php-sdk?style=flat-square&label=downloads)](https://packagist.org/packages/makstech/montonio-php-sdk)
 [![Codecov](https://img.shields.io/codecov/c/github/makstech/montonio-php-sdk?style=flat-square)](https://app.codecov.io/gh/makstech/montonio-php-sdk)
 
-PHP SDK for Montonio Payments based on [https://docs.montonio.com](https://docs.montonio.com).
-- Allows to fluently create requests with structures.
-- Or a raw data can be passed to the structure object, to have it create all the child structures.
-- Uses cURL to make requests.
+PHP SDK for the [Montonio Stargate API](https://docs.montonio.com/api/stargate/). Wraps the API with fluent struct builders and JWT-authenticated requests.
+
+## Features
+
+| Client | Methods | API Docs |
+|--------|---------|----------|
+| **Orders** | `createOrder`, `getOrder` | [Orders guide](https://docs.montonio.com/api/stargate/guides/orders) |
+| **Payment Links** | `createPaymentLink`, `getPaymentLink` | [Payment links guide](https://docs.montonio.com/api/stargate/guides/payment-links) |
+| **Payment Intents** | `createDraft` | [Embedded cards guide](https://docs.montonio.com/api/stargate/guides/embedded-cards) |
+| **Refunds** | `createRefund` | [Refunds guide](https://docs.montonio.com/api/stargate/guides/refunds) |
+| **Sessions** | `createSession` | [Embedded cards guide](https://docs.montonio.com/api/stargate/guides/embedded-cards) |
+| **Payouts** | `getPayouts`, `exportPayout`, `getBalances` | [Payouts guide](https://docs.montonio.com/api/stargate/guides/payouts) |
+| **Stores** | `getPaymentMethods` | [Payment methods guide](https://docs.montonio.com/api/stargate/guides/payment-methods) |
+
+Supported payment methods: bank payments, card payments (Apple Pay, Google Pay), BLIK, Buy Now Pay Later, and Hire Purchase.
 
 ## Requirements
 
-PHP 8.0 or later.
+- PHP 8.0 or later
+- cURL extension
 
-## Composer
+## Installation
 
-You can install the SDK via Composer. Run the following command:
 ```shell
 composer require makstech/montonio-php-sdk
 ```
 
-## Usage
+## Getting Started
 
-You can find your API keys by going to your Montonio dashboard → [_Stores_](https://partnerv2.montonio.com/stores)
-→ Choose the store you are integrating → _Go to API keys_.
-
-To use the SDK, start by initializing the `Montonio\MontonioClient` using your access and secret keys.
-And from there, you can fluently get the "sub-clients". For example, to get `OrdersClient` and create an order:
+Get your API keys from the Montonio [Partner System](https://partnerv2.montonio.com/stores) (Stores → your store → API keys).
 
 ```php
 use Montonio\MontonioClient;
 
-// Initialize the client
 $client = new MontonioClient(
     $accessKey,
     $secretKey,
-    MontonioClient::ENVIRONMENT_SANDBOX, // or MontonioClient::ENVIRONMENT_LIVE
+    MontonioClient::ENVIRONMENT_SANDBOX, // or ENVIRONMENT_LIVE
 );
- 
-// Get OrdersClient
-$ordersClient = $client->orders();
-
-// Create order structure
-
-// This example shows only some setters and options. Check source
-// structures for all options and check documentation for required fields.
-// https://docs.montonio.com/api/stargate/guides/orders#complete-example
-
-$address = (new \Montonio\Structs\Address([
-        'firstName' => 'elon',
-        'lastName' => 'musk',
-    ]))
-    // or
-    ->setFirstName('jeff')
-    ->setLastName('bezos')
-    ...;
-
-// This is same...
-$orderData = new \Montonio\Structs\OrderData([
-    'locale' => 'en',
-    ...
-    'billingAddress' => [
-        'firstName' => 'jeff',
-        ...
-    ],
-]);
-
-// ... as this, but fluently
-$orderData
-    ->setLocale('en')
-    ->setBillingAddress($address)
-    ->setMerchantReference(uniqid())
-    ->setReturnUrl('https://google.com?q=montonio+return+url')
-    ->setNotificationUrl('https://google.com?q=montonio+notification')
-    ->setGrandTotal(1337)
-    ->setCurrency('EUR')
-    ->setPayment(
-        $payment = (new \Montonio\Structs\Payment())
-            ->setCurrency('EUR')
-            ->setAmount(1337)
-            ->setMethod(Payment::METHOD_PAYMENT_INITIATION)
-    )
-    ->addLineItem(
-        $item1 = (new \Montonio\Structs\LineItem())
-            ->setName('elephant')
-            ->setFinalPrice(668.5)
-            ->setQuantity(2)
-    )
-    ->setShippingAddress($address)
-;
-
-// Send API request
-$order = $ordersClient->createOrder($orderData);
-
-// Get payment URL
-$paymentUrl = $order['paymentUrl'];
-
-// Redirect customer to that URL
-header("Location: $paymentUrl");
 ```
 
-You can find the documentation with the response data example, in the [official docs](https://docs.montonio.com/api/stargate/guides/orders#4-submitting-the-token).
+All sub-clients are accessed via factory methods on the main client (e.g. `$client->orders()`, `$client->refunds()`).
 
-### Webhook verification
+## Orders
 
-When a payment is completed (or updated), Montonio sends a webhook POST request to your `notificationUrl` with a JWT token.
-Use `decodeToken()` to verify the signature and decode the payload:
+Create a payment order and redirect the customer to the payment URL.
+
+Structs can be built fluently or from arrays — both approaches can be mixed:
+
+```php
+$orderData = (new \Montonio\Structs\OrderData())
+    ->setMerchantReference('ORDER-123')
+    ->setReturnUrl('https://myshop.com/return')
+    ->setNotificationUrl('https://myshop.com/webhook')
+    ->setGrandTotal(29.99)
+    ->setCurrency('EUR')
+    ->setLocale('en')
+    ->setPayment(
+        (new \Montonio\Structs\Payment())
+            ->setMethod(\Montonio\Structs\Payment::METHOD_PAYMENT_INITIATION)
+            ->setAmount(29.99)
+            ->setCurrency('EUR')
+    )
+    ->setLineItems([
+        [
+            'name' => 'T-Shirt',
+            'quantity' => 1,
+            'finalPrice' => 19.99,
+        ],
+    ])
+    ->addLineItem(
+        (new \Montonio\Structs\LineItem())
+            ->setName('Socks')
+            ->setQuantity(2)
+            ->setFinalPrice(5.00)
+    )
+    ->setBillingAddress(new \Montonio\Structs\Address([
+        'firstName' => 'John',
+        'lastName' => 'Doe',
+        'email' => 'john@example.com',
+        'addressLine1' => 'Main St 1',
+        'locality' => 'Tallinn',
+        'country' => 'EE',
+    ]));
+
+$order = $client->orders()->createOrder($orderData);
+
+// Redirect customer to payment
+header('Location: ' . $order['paymentUrl']);
+```
+
+Retrieve an order:
+
+```php
+$order = $client->orders()->getOrder($orderUuid);
+echo $order['paymentStatus']; // 'PAID', 'PENDING', etc.
+```
+
+See the [orders guide](https://docs.montonio.com/api/stargate/guides/orders) for all available fields and response details.
+
+## Payment Methods
+
+Fetch available payment methods for your store:
+
+```php
+$methods = $client->stores()->getPaymentMethods();
+```
+
+## Payment Links
+
+Create shareable payment links without building a full checkout:
+
+```php
+$link = $client->paymentLinks()->createPaymentLink(
+    (new \Montonio\Structs\CreatePaymentLinkData())
+        ->setDescription('Invoice #456')
+        ->setCurrency('EUR')
+        ->setAmount(50.00)
+        ->setLocale('en')
+        ->setAskAdditionalInfo(true)
+        ->setExpiresAt(date('c', strtotime('+7 days')))
+        ->setType('one_time')
+        ->setNotificationUrl('https://myshop.com/webhook')
+);
+
+echo $link['url']; // https://pay.montonio.com/...
+```
+
+Retrieve a payment link:
+
+```php
+$link = $client->paymentLinks()->getPaymentLink($linkUuid);
+```
+
+## Refunds
+
+Issue a full or partial refund for a paid order:
+
+```php
+$refund = $client->refunds()->createRefund(
+    (new \Montonio\Structs\CreateRefundData())
+        ->setOrderUuid($orderUuid)
+        ->setAmount(10.00)
+        ->setIdempotencyKey($uniqueKey) // V4 UUID recommended
+);
+
+echo $refund['status']; // 'PENDING'
+```
+
+## Webhooks
+
+Montonio sends webhook notifications to your `notificationUrl` when order or refund statuses change. Use `decodeToken()` to verify the JWT signature and decode the payload:
 
 ```php
 // Order webhook: {"orderToken": "<jwt>"}
-$decoded = $client->decodeToken($request['orderToken']);
-echo $decoded->paymentStatus; // 'PAID', 'PENDING', etc.
-echo $decoded->merchantReference; // Your order reference
+$decoded = $client->decodeToken($requestBody['orderToken']);
+echo $decoded->paymentStatus; // 'PAID', 'PENDING', 'ABANDONED', etc.
+echo $decoded->merchantReference;
 
 // Refund webhook: {"refundToken": "<jwt>"}
-$decoded = $client->decodeToken($request['refundToken']);
-echo $decoded->refundStatus; // 'SUCCESSFUL', 'PENDING', etc.
+$decoded = $client->decodeToken($requestBody['refundToken']);
+echo $decoded->refundStatus; // 'SUCCESSFUL', 'PENDING', 'REJECTED', etc.
 ```
 
-See the [webhooks guide](https://docs.montonio.com/api/stargate/guides/webhooks) for full payload details.
+See the [webhooks guide](https://docs.montonio.com/api/stargate/guides/webhooks) for full payload details and retry policy.
 
-### Embedded card payments
+## Embedded Payments
 
-Create a session for the [embedded card payments](https://docs.montonio.com/api/stargate/guides/embedded-cards/) flow, then pass the UUID to the MontonioCheckout JS SDK:
+### Embedded Card Payments
+
+For embedding card payment fields directly in your checkout, create a session and pass it to the [MontonioCheckout JS SDK](https://docs.montonio.com/api/stargate/guides/embedded-cards/):
 
 ```php
 $session = $client->sessions()->createSession();
@@ -131,7 +183,7 @@ $sessionUuid = $session['uuid']; // Pass to frontend JS SDK
 
 ### Embedded BLIK
 
-For [embedded BLIK](https://docs.montonio.com/api/stargate/guides/embedded-blik/) payments, pass the `blikCode` in the payment method options when creating an order:
+For embedded BLIK payments, pass the customer's 6-digit BLIK code when creating an order:
 
 ```php
 $orderData = (new \Montonio\Structs\OrderData())
@@ -149,9 +201,11 @@ $orderData = (new \Montonio\Structs\OrderData())
 ;
 ```
 
-### Payouts
+See the [embedded BLIK guide](https://docs.montonio.com/api/stargate/guides/embedded-blik/) for the full flow.
 
-Retrieve [payout reports](https://docs.montonio.com/api/stargate/guides/payouts/) and balances:
+## Payouts
+
+Retrieve payout reports and balances:
 
 ```php
 // Get store balances
