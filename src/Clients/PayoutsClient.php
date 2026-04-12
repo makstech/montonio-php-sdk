@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Montonio\Clients;
 
-class PayoutsClient extends AbstractClient
+class PayoutsClient extends PaymentsAbstractClient
 {
     /**
      * List payouts for a store.

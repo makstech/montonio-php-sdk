@@ -11,14 +11,10 @@ use Firebase\JWT\Key;
 use JsonException;
 use Montonio\Exception\CurlErrorException;
 use Montonio\Exception\RequestException;
-use Montonio\MontonioClient;
 use stdClass;
 
 abstract class AbstractClient
 {
-    protected const SANDBOX_URL = 'https://sandbox-stargate.montonio.com/api';
-    protected const LIVE_URL = 'https://stargate.montonio.com/api';
-
     protected const ENCODING_ALGORITHM = 'HS256';
 
     public function __construct(
@@ -26,29 +22,6 @@ abstract class AbstractClient
         private string $secretKey,
         private string $environment,
     ) {}
-
-    protected function get(string $url, array $params = []): array
-    {
-        return $this->call(
-            'GET',
-            $this->getUrl($url),
-            null,
-            [
-                'Content-Type: application/json',
-                'Authorization: Bearer ' . $this->generateToken(),
-            ],
-        );
-    }
-
-    protected function post(string $url, array $payload = []): array
-    {
-        return $this->call(
-            'POST',
-            $this->getUrl($url),
-            json_encode(['data' => $this->generateToken($payload)]),
-            ['Content-Type: application/json'],
-        );
-    }
 
     public function generateToken(array $payload = []): string
     {
@@ -72,13 +45,6 @@ abstract class AbstractClient
     public function decodeToken(string $token): stdClass
     {
         return JWT::decode($token, new Key($this->getSecretKey(), static::ENCODING_ALGORITHM));
-    }
-
-    protected function getUrl(string $path): string
-    {
-        return ($this->isSandbox() ? self::SANDBOX_URL : self::LIVE_URL)
-            . (str_starts_with($path, '/') ? '' : '/')
-            . $path;
     }
 
     private function prepareCurl(string $url): CurlHandle
@@ -127,7 +93,7 @@ abstract class AbstractClient
         $httpStatus = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
         if (200 <= $httpStatus && $httpStatus <= 299) {
             curl_close($ch);
-            return json_decode($response, true);
+            return json_decode($response, true) ?? [];
         }
 
         $message = '';
@@ -143,11 +109,6 @@ abstract class AbstractClient
         }
 
         throw new RequestException($message, $httpStatus, $response, $ch);
-    }
-
-    protected function isSandbox(): bool
-    {
-        return $this->getEnvironment() === MontonioClient::ENVIRONMENT_SANDBOX;
     }
 
     protected function getAccessKey(): string

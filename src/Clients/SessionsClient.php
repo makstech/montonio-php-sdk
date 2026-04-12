@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Montonio\Clients;
 
-class SessionsClient extends AbstractClient
+class SessionsClient extends PaymentsAbstractClient
 {
     /**
      * Create a session for embedded card payments.
