@@ -8,6 +8,7 @@ use Montonio\Clients\AbstractClient;
 use Montonio\Clients\OrdersClient;
 use Montonio\Clients\PaymentIntentsClient;
 use Montonio\Clients\PaymentLinksClient;
+use Montonio\Clients\PayoutsClient;
 use Montonio\Clients\RefundsClient;
 use Montonio\Clients\SessionsClient;
 use Montonio\Clients\StoresClient;
@@ -38,6 +39,15 @@ class MontonioClient extends AbstractClient
     public function paymentLinks(): PaymentLinksClient
     {
         return new PaymentLinksClient(
+            $this->getAccessKey(),
+            $this->getSecretKey(),
+            $this->getEnvironment(),
+        );
+    }
+
+    public function payouts(): PayoutsClient
+    {
+        return new PayoutsClient(
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
