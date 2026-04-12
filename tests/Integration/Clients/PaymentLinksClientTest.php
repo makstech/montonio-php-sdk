@@ -25,4 +25,21 @@ class PaymentLinksClientTest extends IntegrationTestCase
         $this->assertArrayHasKey('url', $return);
         $this->assertArrayHasKey('shortUrl', $return);
     }
+
+    public function testGetPaymentLink(): void
+    {
+        $data = (new CreatePaymentLinkData())
+            ->setDescription('Get test')
+            ->setCurrency('EUR')
+            ->setAmount(5.00)
+            ->setLocale('en')
+            ->setAskAdditionalInfo(false)
+            ->setExpiresAt(date('c', strtotime('+1 hour')));
+
+        $created = $this->getMontonioClient()->paymentLinks()->createPaymentLink($data);
+
+        $fetched = $this->getMontonioClient()->paymentLinks()->getPaymentLink($created['uuid']);
+
+        $this->assertSame($created['uuid'], $fetched['uuid']);
+    }
 }

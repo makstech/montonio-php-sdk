@@ -12,4 +12,9 @@ class PaymentLinksClient extends AbstractClient
     {
         return $this->post('payment-links', $data->toArray());
     }
+
+    public function getPaymentLink(string $uuid): array
+    {
+        return $this->get('payment-links/' . $uuid);
+    }
 }
