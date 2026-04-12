@@ -120,6 +120,35 @@ echo $decoded->refundStatus; // 'SUCCESSFUL', 'PENDING', etc.
 
 See the [webhooks guide](https://docs.montonio.com/api/stargate/guides/webhooks) for full payload details.
 
+### Embedded card payments
+
+Create a session for the [embedded card payments](https://docs.montonio.com/api/stargate/guides/embedded-cards/) flow, then pass the UUID to the MontonioCheckout JS SDK:
+
+```php
+$session = $client->sessions()->createSession();
+$sessionUuid = $session['uuid']; // Pass to frontend JS SDK
+```
+
+### Embedded BLIK
+
+For [embedded BLIK](https://docs.montonio.com/api/stargate/guides/embedded-blik/) payments, pass the `blikCode` in the payment method options when creating an order:
+
+```php
+$orderData = (new \Montonio\Structs\OrderData())
+    ->setPayment(
+        (new \Montonio\Structs\Payment())
+            ->setMethod(\Montonio\Structs\Payment::METHOD_BLIK)
+            ->setAmount(100.00)
+            ->setCurrency('PLN')
+            ->setMethodOptions(
+                (new \Montonio\Structs\PaymentMethodOptions())
+                    ->setBlikCode('777123')
+            )
+    )
+    // ... other order fields
+;
+```
+
 ## License
 
 This library is made available under the MIT License (MIT). Please see [License File](LICENSE) for more information.
