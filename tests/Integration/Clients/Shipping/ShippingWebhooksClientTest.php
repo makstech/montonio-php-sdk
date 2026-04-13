@@ -15,7 +15,7 @@ class ShippingWebhooksClientTest extends IntegrationTestCase
 
         // Create webhook
         $data = (new CreateShippingWebhookData())
-            ->setUrl('https://example.com/sdk-test-webhook-' . time())
+            ->setUrl('https://example.com/sdk-test-webhook-' . bin2hex(random_bytes(16)))
             ->setEnabledEvents(['shipment.registered']);
 
         $created = $client->createWebhook($data);
