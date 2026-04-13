@@ -39,6 +39,11 @@ Supported payment methods: bank payments, card payments (Apple Pay, Google Pay),
 - PHP 8.2 or later
 - cURL extension (or a PSR-18 HTTP client)
 
+> **Using PHP 8.0 or 8.1?** [v1 (1.x branch)](https://github.com/makstech/montonio-php-sdk/tree/1.x) is actively maintained with full API coverage (Payments + Shipping):
+> ```shell
+> composer require makstech/montonio-php-sdk:^1.0
+> ```
+
 ## Installation
 
 ```shell
