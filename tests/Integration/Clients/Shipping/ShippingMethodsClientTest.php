@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Clients\Shipping;
 
-use Montonio\Exception\RequestException;
+use Montonio\Exception\ApiException;
 use Montonio\Structs\Shipping\FilterByParcelsData;
 use Montonio\Structs\Shipping\RatesItem;
 use Montonio\Structs\Shipping\RatesParcel;
@@ -18,7 +18,7 @@ class ShippingMethodsClientTest extends IntegrationTestCase
     {
         try {
             return $this->getMontonioClient()->shipping()->shippingMethods()->getShippingMethods();
-        } catch (RequestException $e) {
+        } catch (ApiException $e) {
             $this->markTestSkipped('Shipping methods not available in sandbox: ' . $e->getMessage());
         }
     }

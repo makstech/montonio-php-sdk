@@ -12,12 +12,19 @@ class OrderData extends AbstractStruct
 {
     use Currency, Locale, NotificationUrl;
 
+    /** @deprecated Use PaymentStatus::Pending instead. Will be removed in v3. */
     public const STATUS_PENDING = 'PENDING';
+    /** @deprecated Use PaymentStatus::Paid instead. Will be removed in v3. */
     public const STATUS_PAID = 'PAID';
+    /** @deprecated Use PaymentStatus::Voided instead. Will be removed in v3. */
     public const STATUS_VOIDED = 'VOIDED';
+    /** @deprecated Use PaymentStatus::PartiallyRefunded instead. Will be removed in v3. */
     public const STATUS_PARTIALLY_REFUNDED = 'PARTIALLY_REFUNDED';
+    /** @deprecated Use PaymentStatus::Refunded instead. Will be removed in v3. */
     public const STATUS_REFUNDED = 'REFUNDED';
+    /** @deprecated Use PaymentStatus::Abandoned instead. Will be removed in v3. */
     public const STATUS_ABANDONED = 'ABANDONED';
+    /** @deprecated Use PaymentStatus::Authorized instead. Will be removed in v3. */
     public const STATUS_AUTHORIZED = 'AUTHORIZED';
 
     protected string $merchantReference;

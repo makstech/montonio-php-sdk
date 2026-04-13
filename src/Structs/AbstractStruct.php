@@ -52,6 +52,20 @@ abstract class AbstractStruct
         return $this;
     }
 
+    public static function create(mixed ...$args): static
+    {
+        $instance = new static();
+
+        foreach ($args as $field => $value) {
+            $setter = 'set' . ucfirst($field);
+            if (method_exists($instance, $setter)) {
+                $instance->$setter($value);
+            }
+        }
+
+        return $instance;
+    }
+
     public function toArray(): array
     {
         $return = [];

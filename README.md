@@ -8,6 +8,15 @@ PHP SDK for the [Montonio Stargate API](https://docs.montonio.com/api/stargate/)
 
 ## Features
 
+- **Full API coverage** — Payments (Stargate) and Shipping V2 APIs
+- **PSR-18 support** — bring your own HTTP client (Guzzle, Symfony, etc.) or use the built-in cURL transport
+- **Fluent struct builders** — build request payloads with chained setters, array hydration, or `static create()` with named parameters
+- **Typed enums** — `Environment`, `PaymentMethod`, `PaymentStatus` backed enums with full IDE support
+- **Granular exceptions** — `AuthenticationException`, `ValidationException`, `NotFoundException`, `RateLimitException`, `ServerException`
+- **JWT authentication** — token generation, webhook signature verification
+
+### API Coverage
+
 | Client | Methods | API Docs |
 |--------|---------|----------|
 | **Orders** | `createOrder`, `getOrder` | [Orders guide](https://docs.montonio.com/api/stargate/guides/orders) |
@@ -27,8 +36,15 @@ Supported payment methods: bank payments, card payments (Apple Pay, Google Pay),
 
 ## Requirements
 
-- PHP 8.0 or later
-- cURL extension
+- PHP 8.2 or later
+- cURL extension (or a PSR-18 HTTP client)
+
+> **Using PHP 8.0 or 8.1?** [v1 (1.x branch)](https://github.com/makstech/montonio-php-sdk/tree/1.x) is actively maintained with full API coverage (Payments + Shipping):
+> ```shell
+> composer require makstech/montonio-php-sdk:^1.0
+> ```
+
+> **Upgrading from v1?** See the [upgrade guide](UPGRADE.md) — most users need no code changes.
 
 ## Installation
 
@@ -51,6 +67,27 @@ $client = new MontonioClient(
 ```
 
 All sub-clients are accessed via factory methods on the main client (e.g. `$client->orders()`, `$client->refunds()`).
+
+## Custom HTTP Client (PSR-18)
+
+By default, the SDK uses cURL for HTTP requests. You can optionally provide your own PSR-18 HTTP client:
+
+```php
+use Montonio\MontonioClient;
+
+$httpFactory = new \Nyholm\Psr7\Factory\Psr17Factory();
+
+$client = new MontonioClient(
+    $accessKey,
+    $secretKey,
+    MontonioClient::ENVIRONMENT_SANDBOX,
+    httpClient: new \GuzzleHttp\Client(),
+    requestFactory: $httpFactory,
+    streamFactory: $httpFactory,
+);
+```
+
+This is useful for testing (inject a mock client) or when your framework already provides an HTTP client.
 
 ## Orders
 
