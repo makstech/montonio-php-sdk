@@ -6,6 +6,7 @@ namespace Montonio;
 
 use Montonio\Clients\OrdersClient;
 use Montonio\Clients\PaymentsAbstractClient;
+use Montonio\Clients\Shipping\ShippingClient;
 use Montonio\Clients\PaymentIntentsClient;
 use Montonio\Clients\PaymentLinksClient;
 use Montonio\Clients\PayoutsClient;
@@ -75,6 +76,15 @@ class MontonioClient extends PaymentsAbstractClient
     public function stores(): StoresClient
     {
         return new StoresClient(
+            $this->getAccessKey(),
+            $this->getSecretKey(),
+            $this->getEnvironment(),
+        );
+    }
+
+    public function shipping(): ShippingClient
+    {
+        return new ShippingClient(
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),

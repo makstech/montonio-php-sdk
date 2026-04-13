@@ -6,6 +6,14 @@ namespace Montonio\Clients;
 
 use Montonio\MontonioClient;
 
+/**
+ * Base client for the Montonio Payments (Stargate) API.
+ *
+ * POST requests wrap the payload in a JWT token sent as {"data": "<token>"}.
+ * GET requests use a Bearer JWT in the Authorization header.
+ *
+ * @see https://docs.montonio.com/api/stargate/reference
+ */
 abstract class PaymentsAbstractClient extends AbstractClient
 {
     protected const SANDBOX_URL = 'https://sandbox-stargate.montonio.com/api';

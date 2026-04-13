@@ -4,7 +4,7 @@
 [![Total Downloads](https://img.shields.io/packagist/dt/makstech/montonio-php-sdk?style=flat-square&label=downloads)](https://packagist.org/packages/makstech/montonio-php-sdk)
 [![Codecov](https://img.shields.io/codecov/c/github/makstech/montonio-php-sdk?style=flat-square)](https://app.codecov.io/gh/makstech/montonio-php-sdk)
 
-PHP SDK for the [Montonio Stargate API](https://docs.montonio.com/api/stargate/). Wraps the API with fluent struct builders and JWT-authenticated requests.
+PHP SDK for the [Montonio Stargate API](https://docs.montonio.com/api/stargate/) and [Shipping V2 API](https://docs.montonio.com/api/shipping-v2/reference). Wraps both APIs with fluent struct builders and JWT-authenticated requests.
 
 ## Features
 
@@ -17,6 +17,11 @@ PHP SDK for the [Montonio Stargate API](https://docs.montonio.com/api/stargate/)
 | **Sessions** | `createSession` | [Embedded cards guide](https://docs.montonio.com/api/stargate/guides/embedded-cards) |
 | **Payouts** | `getPayouts`, `exportPayout`, `getBalances` | [Payouts guide](https://docs.montonio.com/api/stargate/guides/payouts) |
 | **Stores** | `getPaymentMethods` | [Payment methods guide](https://docs.montonio.com/api/stargate/guides/payment-methods) |
+| **Shipping / Carriers** | `getCarriers` | [Shipping API reference](https://docs.montonio.com/api/shipping-v2/reference) |
+| **Shipping / Methods** | `getShippingMethods`, `getPickupPoints`, `getCourierServices`, `filterByParcels`, `getRates` | [Shipping methods guide](https://docs.montonio.com/api/shipping-v2/guides/shipping-methods) |
+| **Shipping / Shipments** | `createShipment`, `updateShipment`, `getShipment` | [Shipments guide](https://docs.montonio.com/api/shipping-v2/guides/shipments) |
+| **Shipping / Labels** | `createLabelFile`, `getLabelFile` | [Labels guide](https://docs.montonio.com/api/shipping-v2/guides/labels) |
+| **Shipping / Webhooks** | `createWebhook`, `listWebhooks`, `deleteWebhook` | [Webhooks guide](https://docs.montonio.com/api/shipping-v2/guides/webhooks) |
 
 Supported payment methods: bank payments, card payments (Apple Pay, Google Pay), BLIK, Buy Now Pay Later, and Hire Purchase.
 
@@ -218,6 +223,135 @@ $payouts = $client->payouts()->getPayouts($storeUuid, limit: 50, offset: 0, orde
 $export = $client->payouts()->exportPayout($storeUuid, $payoutUuid, 'excel');
 $downloadUrl = $export['url'];
 ```
+
+## Shipping
+
+All shipping sub-clients are accessed via `$client->shipping()`:
+
+### Carriers
+
+```php
+$carriers = $client->shipping()->carriers()->getCarriers();
+```
+
+### Shipping Methods
+
+```php
+// All shipping methods
+$methods = $client->shipping()->shippingMethods()->getShippingMethods();
+
+// Pickup points for a carrier
+$pickupPoints = $client->shipping()->shippingMethods()
+    ->getPickupPoints('omniva', 'EE');
+
+// Courier services for a carrier
+$courierServices = $client->shipping()->shippingMethods()
+    ->getCourierServices('dpd', 'EE');
+
+// Filter methods by parcel dimensions
+$filtered = $client->shipping()->shippingMethods()->filterByParcels(
+    (new \Montonio\Structs\Shipping\FilterByParcelsData())
+        ->setParcels([
+            (new \Montonio\Structs\Shipping\ShipmentParcel())->setWeight(1.5),
+        ]),
+    'EE' // destination
+);
+
+// Calculate shipping rates
+$rates = $client->shipping()->shippingMethods()->getRates(
+    (new \Montonio\Structs\Shipping\ShippingRatesData())
+        ->setDestination('EE')
+        ->setParcels([
+            (new \Montonio\Structs\Shipping\RatesParcel())->setItems([
+                (new \Montonio\Structs\Shipping\RatesItem())
+                    ->setLength(20.0)
+                    ->setWidth(15.0)
+                    ->setHeight(10.0)
+                    ->setWeight(0.5),
+            ]),
+        ])
+);
+```
+
+### Shipments
+
+```php
+$shipment = $client->shipping()->shipments()->createShipment(
+    (new \Montonio\Structs\Shipping\CreateShipmentData())
+        ->setShippingMethod(
+            (new \Montonio\Structs\Shipping\ShipmentShippingMethod())
+                ->setType('pickupPoint')
+                ->setId($pickupPointId) // UUID from getPickupPoints()
+        )
+        ->setReceiver(
+            (new \Montonio\Structs\Shipping\ShippingContact())
+                ->setName('John Doe')
+                ->setPhoneCountryCode('372')
+                ->setPhoneNumber('53334770')
+                ->setEmail('john@example.com')
+        )
+        ->setParcels([
+            (new \Montonio\Structs\Shipping\ShipmentParcel())->setWeight(1.0),
+        ])
+        ->setMerchantReference('ORDER-123')
+);
+
+echo $shipment['id'];
+echo $shipment['status']; // 'pending', 'registered', etc.
+
+// Get shipment details
+$shipment = $client->shipping()->shipments()->getShipment($shipmentId);
+
+// Update a shipment
+$updated = $client->shipping()->shipments()->updateShipment($shipmentId,
+    (new \Montonio\Structs\Shipping\UpdateShipmentData())
+        ->setReceiver(
+            (new \Montonio\Structs\Shipping\ShippingContact())
+                ->setName('Jane Doe')
+                ->setPhoneCountryCode('372')
+                ->setPhoneNumber('55512345')
+        )
+);
+```
+
+### Label Files
+
+```php
+$labelFile = $client->shipping()->labels()->createLabelFile(
+    (new \Montonio\Structs\Shipping\CreateLabelFileData())
+        ->setShipmentIds([$shipmentId])
+        ->setPageSize('A4')
+        ->setSynchronous(true)
+);
+
+echo $labelFile['labelFileUrl']; // PDF download URL (expires in 5 minutes)
+
+// Get label file status
+$labelFile = $client->shipping()->labels()->getLabelFile($labelFileId);
+echo $labelFile['status']; // 'pending', 'ready', 'failed'
+```
+
+### Shipping Webhooks
+
+```php
+$webhook = $client->shipping()->webhooks()->createWebhook(
+    (new \Montonio\Structs\Shipping\CreateShippingWebhookData())
+        ->setUrl('https://myshop.com/shipping-webhook')
+        ->setEnabledEvents([
+            'shipment.registered',
+            'shipment.statusUpdated',
+            'labelFile.ready',
+        ])
+);
+
+// List all webhooks
+$webhooks = $client->shipping()->webhooks()->listWebhooks();
+
+// Delete a webhook
+$client->shipping()->webhooks()->deleteWebhook($webhookId);
+```
+
+See the [Shipping API reference](https://docs.montonio.com/api/shipping-v2/reference) for all available fields and response details.
 
 ## License
 

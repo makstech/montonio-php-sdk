@@ -44,8 +44,6 @@ class PayoutsClient extends PaymentsAbstractClient
      * @param string $payoutUuid The payout UUID
      * @param string $format     Export format: 'excel' or 'xml'
      * @return array Contains 'url' with a pre-signed download link
-     *
-     * @codeCoverageIgnore Requires actual payouts in the sandbox which can't be created via API
      */
     public function exportPayout(string $storeUuid, string $payoutUuid, string $format = 'excel'): array
     {
