@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - '1.x'
     paths:
       - '**.php'
       - '.github/workflows/tests.yml'
