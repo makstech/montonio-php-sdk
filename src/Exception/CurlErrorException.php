@@ -7,19 +7,18 @@ namespace Montonio\Exception;
 use CurlHandle;
 use Throwable;
 
+/**
+ * @deprecated Use TransportException instead. Will be removed in v3.
+ */
 class CurlErrorException extends MontonioException
 {
-    private ?CurlHandle $curlHandle;
-
     public function __construct(
         string $message = '',
         int $code = 0,
-        CurlHandle $ch = null,
-        ?Throwable $previous = null
+        private readonly ?CurlHandle $curlHandle = null,
+        ?Throwable $previous = null,
     ) {
         parent::__construct($message, $code, $previous);
-
-        $this->curlHandle = $ch;
     }
 
     public function getCurlHandle(): ?CurlHandle

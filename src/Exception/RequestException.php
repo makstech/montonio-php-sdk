@@ -7,30 +7,48 @@ namespace Montonio\Exception;
 use CurlHandle;
 use Throwable;
 
+/**
+ * @deprecated Use ApiException or its subclasses instead. Will be removed in v3.
+ */
 class RequestException extends MontonioException
 {
-    private string $response;
-    private ?CurlHandle $curlHandle;
-
     public function __construct(
         string $message = '',
         int $code = 0,
-        string $response = '',
-        ?CurlHandle $curlHandle = null,
-        ?Throwable $previous = null
+        private readonly string $responseBody = '',
+        private readonly ?CurlHandle $curlHandle = null,
+        ?Throwable $previous = null,
     ) {
         parent::__construct($message, $code, $previous);
-
-        $this->response = $response;
-        $this->curlHandle = $curlHandle;
     }
 
+    public function getStatusCode(): int
+    {
+        return $this->getCode();
+    }
+
+    public function getResponseBody(): string
+    {
+        return $this->responseBody;
+    }
+
+    public function getCurlHandle(): ?CurlHandle
+    {
+        return $this->curlHandle;
+    }
+
+    /**
+     * @deprecated Use getResponseBody() instead. Will be removed in v3.
+     */
     public function getResponse(): string
     {
-        return $this->response;
+        return $this->responseBody;
     }
 
-    public function curlHandle(): CurlHandle
+    /**
+     * @deprecated Use getCurlHandle() instead. Will be removed in v3.
+     */
+    public function curlHandle(): ?CurlHandle
     {
         return $this->curlHandle;
     }

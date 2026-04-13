@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Montonio\Structs;
 
+use Montonio\Enums\PaymentMethod;
 use Montonio\Structs\Fields\Amount;
 use Montonio\Structs\Fields\Currency;
 
@@ -11,11 +12,17 @@ class Payment extends AbstractStruct
 {
     use Amount, Currency;
 
+    /** @deprecated Use PaymentMethod::PaymentInitiation instead. Will be removed in v3. */
     public const METHOD_PAYMENT_INITIATION = 'paymentInitiation';
+    /** @deprecated Use PaymentMethod::CardPayments instead. Will be removed in v3. */
     public const METHOD_CARD = 'cardPayments';
+    /** @deprecated Use PaymentMethod::Blik instead. Will be removed in v3. */
     public const METHOD_BLIK = 'blik';
+    /** @deprecated Use PaymentMethod::HirePurchase instead. Will be removed in v3. */
     public const METHOD_HIRE_PURCHASE = 'hirePurchase';
+    /** @deprecated Use PaymentMethod::BuyNowPayLater instead. Will be removed in v3. */
     public const METHOD_BUY_NOW_PAY_LATER = 'bnpl';
+
     protected string $method;
     protected string $methodDisplay;
     protected PaymentMethodOptions $methodOptions;
@@ -27,11 +34,10 @@ class Payment extends AbstractStruct
 
     /**
      * The Identifier of the Montonio Payment Method.
-     * Use one of predefined const's defined in this class.
      */
-    public function setMethod(string $method): self
+    public function setMethod(PaymentMethod|string $method): self
     {
-        $this->method = $method;
+        $this->method = $method instanceof PaymentMethod ? $method->value : $method;
 
         return $this;
     }

@@ -21,6 +21,9 @@ class ShippingClient extends ShippingAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -30,6 +33,9 @@ class ShippingClient extends ShippingAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -39,6 +45,9 @@ class ShippingClient extends ShippingAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -48,6 +57,9 @@ class ShippingClient extends ShippingAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -57,6 +69,9 @@ class ShippingClient extends ShippingAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 }

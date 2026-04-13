@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace Tests\Integration\Clients;
 
 use CurlHandle;
-use Montonio\Exception\RequestException;
+use Montonio\Exception\ApiException;
 use Montonio\Structs\CreatePaymentIntentDraftData;
 use Montonio\Structs\Payment;
 use Tests\Integration\IntegrationTestCase;
@@ -28,12 +28,12 @@ class PaymentIntentsClientTest extends IntegrationTestCase
     public function testCreateDraft_fails_missingRequiredData(): void
     {
         try {
-            $response = $this->getMontonioClient()->paymentIntents()->createDraft(new CreatePaymentIntentDraftData());
-        } catch (RequestException $e) {
+            $this->getMontonioClient()->paymentIntents()->createDraft(new CreatePaymentIntentDraftData());
+        } catch (ApiException $e) {
         } finally {
-            $this->assertInstanceOf(RequestException::class, $e);
-            $this->assertJson($e->getResponse());
-            $this->assertInstanceOf(CurlHandle::class, $e->curlHandle());
+            $this->assertInstanceOf(ApiException::class, $e);
+            $this->assertJson($e->getResponseBody());
+            $this->assertInstanceOf(CurlHandle::class, $e->getCurlHandle());
         }
     }
 }

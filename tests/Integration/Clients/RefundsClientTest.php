@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Clients;
 
-use Montonio\Exception\RequestException;
+use Montonio\Exception\ApiException;
 use Montonio\Structs\CreateRefundData;
 use Tests\BaseTestCase;
 
@@ -17,7 +17,7 @@ class RefundsClientTest extends BaseTestCase
             ->setAmount(1.00)
             ->setIdempotencyKey(uniqid('test-', true));
 
-        $this->expectException(RequestException::class);
+        $this->expectException(ApiException::class);
 
         $this->getMontonioClient()->refunds()->createRefund($data);
     }

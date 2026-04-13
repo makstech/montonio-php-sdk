@@ -16,7 +16,9 @@ use Montonio\Clients\StoresClient;
 
 class MontonioClient extends PaymentsAbstractClient
 {
+    /** @deprecated Use Environment::Sandbox instead. Will be removed in v3. */
     public const ENVIRONMENT_SANDBOX = 'sandbox';
+    /** @deprecated Use Environment::Live instead. Will be removed in v3. */
     public const ENVIRONMENT_LIVE = 'live';
 
     public function orders(): OrdersClient
@@ -25,6 +27,9 @@ class MontonioClient extends PaymentsAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -34,6 +39,9 @@ class MontonioClient extends PaymentsAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -43,6 +51,9 @@ class MontonioClient extends PaymentsAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -52,6 +63,9 @@ class MontonioClient extends PaymentsAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -61,6 +75,9 @@ class MontonioClient extends PaymentsAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -70,6 +87,9 @@ class MontonioClient extends PaymentsAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -79,6 +99,9 @@ class MontonioClient extends PaymentsAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 
@@ -88,6 +111,9 @@ class MontonioClient extends PaymentsAbstractClient
             $this->getAccessKey(),
             $this->getSecretKey(),
             $this->getEnvironment(),
+            $this->getHttpClient(),
+            $this->getRequestFactory(),
+            $this->getStreamFactory(),
         );
     }
 }

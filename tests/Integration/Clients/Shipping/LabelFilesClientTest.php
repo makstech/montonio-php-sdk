@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Tests\Integration\Clients\Shipping;
 
-use Montonio\Exception\RequestException;
+use Montonio\Exception\ApiException;
 use Montonio\Structs\Shipping\CreateLabelFileData;
 use Montonio\Structs\Shipping\CreateShipmentData;
 use Montonio\Structs\Shipping\ShipmentParcel;
@@ -21,7 +21,7 @@ class LabelFilesClientTest extends IntegrationTestCase
         // Get a pickup point ID
         try {
             $methods = $client->shippingMethods()->getShippingMethods();
-        } catch (RequestException $e) {
+        } catch (ApiException $e) {
             $this->markTestSkipped('Shipping methods not available in sandbox: ' . $e->getMessage());
         }
 
