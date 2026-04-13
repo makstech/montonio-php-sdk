@@ -31,6 +31,8 @@ class ShipmentProductTest extends BaseTestCase
         $this->assertSame('EUR', $product->getCurrency());
         $this->assertSame(['color' => 'Blue'], $product->getAttributes());
         $this->assertSame('https://example.com/image.jpg', $product->getImageUrl());
+        $this->assertSame('https://example.com/product', $product->getStoreProductUrl());
+        $this->assertSame('A blue toy car', $product->getDescription());
     }
 
     public function testConstructFromArray(): void

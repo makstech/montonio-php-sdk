@@ -27,16 +27,32 @@ class CreateShipmentDataTest extends BaseTestCase
                     ->setPhoneCountryCode('372')
                     ->setPhoneNumber('53334770')
             )
+            ->setSender(
+                (new ShippingContact())
+                    ->setName('Sender Y')
+                    ->setPhoneCountryCode('370')
+                    ->setPhoneNumber('12345678')
+            )
             ->setParcels([
                 (new ShipmentParcel())->setWeight(1.0),
             ])
+            ->setProducts([
+                (new ShipmentProduct())->setSku('sku-1')->setName('Widget')->setQuantity(2),
+            ])
             ->setMerchantReference('order-1')
+            ->setMontonioOrderUuid('montonio-uuid-123')
+            ->setOrderComment('Please handle with care')
             ->setSynchronous(true);
 
         $this->assertSame('pickupPoint', $data->getShippingMethod()->getType());
         $this->assertSame('Receiver X', $data->getReceiver()->getName());
+        $this->assertSame('Sender Y', $data->getSender()->getName());
         $this->assertCount(1, $data->getParcels());
+        $this->assertCount(1, $data->getProducts());
+        $this->assertSame('sku-1', $data->getProducts()[0]->getSku());
         $this->assertSame('order-1', $data->getMerchantReference());
+        $this->assertSame('montonio-uuid-123', $data->getMontonioOrderUuid());
+        $this->assertSame('Please handle with care', $data->getOrderComment());
         $this->assertTrue($data->getSynchronous());
     }
 

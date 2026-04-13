@@ -52,6 +52,19 @@ class ShippingRatesDataTest extends BaseTestCase
         $this->assertSame('cm', $array['parcels'][0]['items'][0]['dimensionUnit']);
     }
 
+    public function testConstructFromArray(): void
+    {
+        $data = new ShippingRatesData([
+            'destination' => 'FI',
+            'parcels' => [
+                ['items' => [['length' => 5.0, 'width' => 5.0, 'height' => 5.0, 'weight' => 0.3]]],
+            ],
+        ]);
+
+        $this->assertSame('FI', $data->getDestination());
+        $this->assertInstanceOf(RatesParcel::class, $data->getParcels()[0]);
+    }
+
     public function testNullableGetters(): void
     {
         $data = new ShippingRatesData();

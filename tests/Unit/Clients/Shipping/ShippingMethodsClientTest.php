@@ -112,6 +112,27 @@ class ShippingMethodsClientTest extends BaseTestCase
         $this->assertSame(['countries' => []], $result);
     }
 
+    public function testFilterByParcelsWithSource(): void
+    {
+        $mock = $this->createClientMock();
+
+        $mock->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST',
+                $this->logicalAnd(
+                    $this->stringContains('destination=EE'),
+                    $this->stringContains('source=LT')
+                ),
+            )
+            ->willReturn(['countries' => []]);
+
+        $data = (new FilterByParcelsData())
+            ->setParcels([(new ShipmentParcel())->setWeight(1.0)]);
+
+        $mock->filterByParcels($data, 'EE', 'LT');
+    }
+
     public function testGetRates(): void
     {
         $mock = $this->createClientMock();
