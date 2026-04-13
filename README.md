@@ -44,6 +44,8 @@ Supported payment methods: bank payments, card payments (Apple Pay, Google Pay),
 > composer require makstech/montonio-php-sdk:^1.0
 > ```
 
+> **Upgrading from v1?** See the [upgrade guide](UPGRADE.md) — most users need no code changes.
+
 ## Installation
 
 ```shell
