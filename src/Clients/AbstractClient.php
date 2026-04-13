@@ -11,7 +11,6 @@ use JsonException;
 use Montonio\Enums\Environment;
 use Montonio\Exception\ApiException;
 use Montonio\Exception\AuthenticationException;
-use Montonio\Exception\CurlErrorException;
 use Montonio\Exception\NotFoundException;
 use Montonio\Exception\RateLimitException;
 use Montonio\Exception\ServerException;

@@ -88,7 +88,7 @@ class PsrClientTest extends BaseTestCase
         );
     }
 
-    public function testPsr18SuccessfulResponse(): void
+    public function testPsr18SuccessfulGetResponse(): void
     {
         $client = $this->createPsrClient(200, '{"paymentMethods":[]}');
 
@@ -96,6 +96,16 @@ class PsrClientTest extends BaseTestCase
 
         $this->assertIsArray($result);
         $this->assertArrayHasKey('paymentMethods', $result);
+    }
+
+    public function testPsr18SuccessfulPostResponse(): void
+    {
+        $client = $this->createPsrClient(200, '{"uuid":"test-uuid"}');
+
+        $result = $client->sessions()->createSession();
+
+        $this->assertIsArray($result);
+        $this->assertArrayHasKey('uuid', $result);
     }
 
     public function testPsr18TransportException(): void
